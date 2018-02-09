@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use App\Cliente;
@@ -12,8 +11,6 @@ use DateTime;
 use DB;
 use Mail;
 
-
-
 class ClientesController extends Controller
 {
      
@@ -24,30 +21,32 @@ class ClientesController extends Controller
      */
     public function index()
     {
-       
+          //ejecuta esta funcion 
           $this->dias_restantes();
-
+          //ejecuta esta funcion  
           $this->enviar_email();
-
+          //todos los clientes
           $clientes = Cliente::all();
-
+          //devuelve la vista y la presenta al usuario
           return view('clientes.index', ['clientes' => $clientes]);
                
-  }
-            //Mediante esta funcion se calculan los dias restantes por cada cliente
-            public function dias_restantes()
-            {
+    }
+    
+    //Mediante esta funcion se calculan los dias restantes por cada cliente
+    public function dias_restantes()
+    {
+          
+          //todos los clientes
+          $clientes = Cliente::all();
 
-                $clientes = Cliente::all();
-
-        //fecha actual
+          //fecha actual
           date_default_timezone_set('America/Caracas');
           $fecha_actual = date('Y-m-d H:i:s');
           $fecha_actual = new DateTime($fecha_actual);
 
-            foreach ($clientes as $cliente) {
-
-          
+          //recorre todos los clientes  
+          foreach ($clientes as $cliente)
+          {
 
           //fecha en la que fue registrado el cliente
            $fecha_registro = $cliente->created_at;
@@ -66,24 +65,27 @@ class ClientesController extends Controller
           //Se actualiza el valor del campo dias restantes en la BD
            DB::table('clientes')->where('id', $cliente->id)->update(['dias_restantes' => $dias_restantes]);
 
-}
-        //Se redirecciona al index  
+          }
+          //Se redirecciona al index  
           return redirect()->route('clientes.index');
-}
+    }
             
                
 
          
            
-//esta funcion permite enviar email de aquellos clientes que les queden 5 o menos dias de premium
-public function enviar_email(){
+    //esta funcion permite enviar email de aquellos clientes que les queden 5 o menos dias de premium
+    public function enviar_email()
+    {
 
-            $clientes = Cliente::all();
+           $clientes = Cliente::all();
 
   
-           foreach ($clientes as $cliente) {
+           foreach ($clientes as $cliente)
+           {
 
-            if($cliente->dias_restantes<=5 && $cliente->email_enviado==0) {
+           if($cliente->dias_restantes<=5 && $cliente->email_enviado==0)
+           {
 
                          $data = array(
                         'name' => $cliente->username,
@@ -92,7 +94,8 @@ public function enviar_email(){
 
                 $body  = 'Al usuario '.$cliente->username.' le quedan '.$cliente->dias_restantes.' dias de premium!';
 
-                Mail::send('clientes.alerta', $data, function ($message) use ($body) {
+                Mail::send('clientes.alerta', $data, function ($message) use ($body)
+                {
 
                 $message->from('santurdaneta@gmail.com', '');
 
@@ -100,25 +103,16 @@ public function enviar_email(){
 
                 $message->setBody($body);
 
-    }); 
+                }); 
 
                echo "<script type=\"text/javascript\">alert(\"Se ha enviado un email de alerta debido a que al menos a un cliente le quedan menos de cinco dias premium!\");</script>";  
 
                DB::table('clientes')->update(['email_enviado' => 1]);
-                }
+          }
 
-}
-}
-  /**
-     * Display a listing of Cliente.
-     *
-     * @return \Illuminate\Http\Response
-     */
-        public function show($id)
-    {
-         
- 
+          }
     }
+
 
     /**
      * Show the form for creating new Cliente.
@@ -127,10 +121,10 @@ public function enviar_email(){
      */
     public function create()
     {
-         
-            return view('clientes.create', compact('cliente'));
+         //devuelve la vista para registrar a un cliente
+         return view('clientes.create', compact('cliente'));
       
-     }
+    }
 
     /**
      * Store a newly created Cliente in storage.
@@ -140,9 +134,9 @@ public function enviar_email(){
      */
     public function store(StoreClientesRequest $request)
     {
-        
+          //request que crea a un cliente
           Cliente::create($request->all());
-          //Se redirecciona al index  
+          //Se redirecciona al index de clientes 
           return redirect()->route('clientes.index');
     }
 
@@ -154,9 +148,9 @@ public function enviar_email(){
      */
     public function edit($id)
     {
-        
+        ///busca al cliente con ese id
         $cliente = Cliente::findOrFail($id);        
-
+        //devuelve la vista para editar a un cliente
         return view('clientes.edit', compact('cliente'));
     }
 
@@ -172,16 +166,17 @@ public function enviar_email(){
      */
     public function update(UpdateClientesRequest $request, $id)
     {
+           //busca al cliente con ese id
            $cliente = Cliente::findOrFail($id);
 
-               //la suma de los dias a agregar mas los dias registrados
+           //la suma de los dias a agregar mas los dias registrados
            $dias_a_agregar=$request->dias_a_agregar+$cliente->dias_registrados; 
 
-             // $se actualiza el valor del campo dias registrados en la BD
+           // $se actualiza el valor del campo dias registrados en la BD
            $cliente->update(['dias_registrados' =>  $dias_a_agregar]);
 
- 
-        return redirect()->route('clientes.index');
+           //redirecciona al index de clientes
+           return redirect()->route('clientes.index');
     }
 
     
@@ -193,12 +188,17 @@ public function enviar_email(){
      */
     public function destroy($id)
     {
+        //busca al cliente con ese id
         $cliente = Cliente::findOrFail($id);
+
+        //borra a dicho cliente
         $cliente->delete();
 
+        //redirecciona al index de clientes
         return redirect()->route('clientes.index');
     }
 
     
 
 }
+
