@@ -42,8 +42,7 @@ class ClientesController extends Controller
           //fecha actual
           date_default_timezone_set('America/Caracas');
           $fecha_actual = date('Y-m-d H:i:s');
-          $fecha_actual = new DateTime($fecha_actual);
-
+       
           //recorre todos los clientes  
           foreach ($clientes as $cliente)
           {
@@ -56,11 +55,9 @@ class ClientesController extends Controller
         
           //fecha en la que se acaban los dias registrados del cliente
            $fecha_fin = date('Y-m-d H:i:s', strtotime("$fecha_registro + $dias_registrados day"));
-           $fecha_fin = new DateTime($fecha_fin);
-
-          //Aca se calculan los dias restantes
-           $dias_restantes = $fecha_fin->diff($fecha_actual); 
-           $dias_restantes = $dias_restantes->format("%d");
+ 
+           //Aca se calculan los dias restantes
+           $dias_restantes = floor(strtotime($fecha_fin)/(60*60*24)) - floor(strtotime($fecha_actual)/(60*60*24));
 
           //Se actualiza el valor del campo dias restantes en la BD
            DB::table('clientes')->where('id', $cliente->id)->update(['dias_restantes' => $dias_restantes]);
