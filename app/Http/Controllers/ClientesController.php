@@ -57,7 +57,7 @@ class ClientesController extends Controller
            $fecha_fin = date('Y-m-d H:i:s', strtotime("$fecha_registro + $dias_registrados day"));
  
            //Aca se calculan los dias restantes
-           $dias_restantes = floor(strtotime($fecha_fin)/(60*60*24)) - floor(strtotime($fecha_actual)/(60*60*24));
+          $dias_restantes = round(abs($fecha_fin-$fecha_actual)/86400);  
 
           //Se actualiza el valor del campo dias restantes en la BD
            DB::table('clientes')->where('id', $cliente->id)->update(['dias_restantes' => $dias_restantes]);
