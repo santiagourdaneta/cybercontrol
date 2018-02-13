@@ -1,6 +1,14 @@
 # CYBER CONTROL -DOCUMENTACIÓN
 En este proyecto se diseñó e implementó un aplicación web en el lenguaje de programación PHP para el **manejo de los dias de acceso de los clientes** en un cyber cafe.
 
+## Como usar
+
+- Clonar el repositorio con git clone.
+- Copiar el archivo .env.example a .env y editar credenciales de base de datos.
+- Ejecutar composer install.
+- Ejecutar php artisan key:generate.
+- Ejecutar php artisan migrate --seed 
+- Listo! Accede al URL del proyecto y haz login con las credenciales Correo: admin@admin.com Clave: password
 
 ## Funcionalidades:
 
