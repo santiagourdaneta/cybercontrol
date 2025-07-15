@@ -2808,7 +2808,7 @@
     var newlineRE = /\n/g;
     var saveRE = /[\{,]\s*[\w\$_]+\s*:|('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*\$\{|\}(?:[^`\\]|\\.)*`|`(?:[^`\\]|\\.)*`)|new |typeof |void /g;
     var restoreRE = /"(\d+)"/g;
-    var pathTestRE = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['.*?'\]|\[".*?"\]|\[\d+\]|\[[A-Za-z_$][\w$]*\])*$/;
+    var pathTestRE = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*'\]|\["[^"]*"\]|\[\d+\]|\[[A-Za-z_$][\w$]*\])*$/;
     var identRE = /[^\w$\.](?:[A-Za-z_$][\w$]*)/g;
     var booleanLiteralRE = /^(?:true|false)$/;
 
