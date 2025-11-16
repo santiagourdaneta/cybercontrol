@@ -3475,30 +3475,35 @@
         }
 
         var frag = document.createDocumentFragment();
-        var tagMatch = templateString.match(tagRE$1);
-        var entityMatch = entityRE.test(templateString);
-
-        if (!tagMatch && !entityMatch) {
-            // text only, return a single text node.
+        // If raw is true, always treat as plain text, never interpret as HTML!
+        if (raw) {
             frag.appendChild(document.createTextNode(templateString));
         } else {
-            var tag = tagMatch && tagMatch[1];
-            var wrap = map[tag] || map.efault;
-            var depth = wrap[0];
-            var prefix = wrap[1];
-            var suffix = wrap[2];
-            var node = document.createElement('div');
+            var tagMatch = templateString.match(tagRE$1);
+            var entityMatch = entityRE.test(templateString);
+        
+            if (!tagMatch && !entityMatch) {
+                // text only, return a single text node.
+                frag.appendChild(document.createTextNode(templateString));
+            } else {
+                var tag = tagMatch && tagMatch[1];
+                var wrap = map[tag] || map.efault;
+                var depth = wrap[0];
+                var prefix = wrap[1];
+                var suffix = wrap[2];
+                var node = document.createElement('div');
 
-            node.innerHTML = prefix + templateString + suffix;
-            while (depth--) {
-                node = node.lastChild;
-            }
+                node.innerHTML = prefix + templateString + suffix;
+                while (depth--) {
+                    node = node.lastChild;
+                }
 
-            var child;
-            /* eslint-disable no-cond-assign */
-            while (child = node.firstChild) {
-                /* eslint-enable no-cond-assign */
-                frag.appendChild(child);
+                var child;
+                /* eslint-disable no-cond-assign */
+                while (child = node.firstChild) {
+                    /* eslint-enable no-cond-assign */
+                    frag.appendChild(child);
+                }
             }
         }
         if (!raw) {
@@ -3527,7 +3532,8 @@
         }
         // script template
         if (node.tagName === 'SCRIPT') {
-            return stringToFragment(node.textContent);
+            // Always treat script templates as text to avoid XSS
+            return stringToFragment(node.textContent, true);
         }
         // normal node, clone it to avoid mutating the original
         var clonedNode = cloneNode(node);
