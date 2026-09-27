@@ -3475,19 +3475,17 @@
         }
 
         var frag = document.createDocumentFragment();
-        // If raw is true, always treat as plain text, never interpret as HTML!
+        // If raw is true, always treat as plain text, never interpret as HTML.
         if (raw) {
             frag.appendChild(document.createTextNode(templateString));
         } else {
             var tagMatch = templateString.match(tagRE$1);
-            var entityMatch = entityRE.test(templateString);
-        
-            if (!tagMatch && !entityMatch) {
+            if (!tagMatch) {
                 // text only, return a single text node.
                 frag.appendChild(document.createTextNode(templateString));
             } else {
                 var tag = tagMatch && tagMatch[1];
-                var wrap = map[tag] || map.efault;
+                var wrap = map[tag] || map.default;
                 var depth = wrap[0];
                 var prefix = wrap[1];
                 var suffix = wrap[2];
@@ -3532,7 +3530,7 @@
         }
         // script template
         if (node.tagName === 'SCRIPT') {
-            // Always treat script templates as text to avoid XSS
+            // Always treat script templates as text to avoid XSS.
             return stringToFragment(node.textContent, true);
         }
         // normal node, clone it to avoid mutating the original
